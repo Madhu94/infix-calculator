@@ -1,25 +1,25 @@
 import React, {useState} from 'react';
+import {evalInfixExpression} from './evaluator';
 import './Calculator.css';
 
 const buttons = [['1','4','7'],
                  ['2','5','8','0'],
                  ['3','6','9'],
-                 ['(', ')','C'],
+                 ['(', ')', '=', 'C'],
                  ['+','-','*','/']]
 
-const deriveOutput = (input) => {
-    // TODO: Process infix string
-    return '';
-}
 
 export default function Calculator() {
     const [input, setInput] = useState('');
-    const output = deriveOutput(input);
+    const [output, setOutput] = useState('');
     const buttonRows = buttons.map((buttonSet) => {
         const buttons = buttonSet.map((val) => {
             return (<button key={val} onClick={() => {
                 if (val === 'C') {
-                    setInput('');
+                    setInput('.');
+                    setOutput('');
+                } else if (val === '=') {
+                    setOutput(evalInfixExpression(input));
                 } else {
                     setInput(`${input}${val}`);
                 }
