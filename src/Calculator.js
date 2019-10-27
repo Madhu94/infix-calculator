@@ -21,7 +21,11 @@ export default function Calculator() {
                 } else if (val === '=') {
                     setOutput(evalInfixExpression(input));
                 } else {
-                    setInput(`${input}${val}`);
+                    if (input === '.') {
+                        setInput(val);
+                    } else {
+                        setInput(`${input}${val}`);
+                    }
                 }
             }}>{val}</button>);
         });

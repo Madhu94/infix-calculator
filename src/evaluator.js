@@ -16,11 +16,11 @@ class Buffer {
 }
 
 const operatorsMetaData = {
-    '+': {precedence: 1, op: (a, b) => a + b},
-    '-': {precedence: 1, op: (a, b) => a - b},
-    '*': {precedence: 2, op: (a, b) => a * b},
-    '/': {precedence: 2, op: (a, b) => a / b},
-    '(': {precedence: 0}
+    '+': { precedence: 1, op: (a, b) => a + b },
+    '-': { precedence: 1, op: (a, b) => a - b },
+    '*': { precedence: 2, op: (a, b) => a * b },
+    '/': { precedence: 2, op: (a, b) => a / b },
+    '(': { precedence: 0 }
 };
 
 class Evaluator {
@@ -39,7 +39,10 @@ class Evaluator {
 
     evalNext() {
         if (this._operands.length === 1 && this._operators.length === 0) {
-            return this.operands[0];
+            return this._operands[0];
+        }
+        if (this._operators.length === 1 && this._operators[0] === '(') {
+            return this._operands[0];
         }
         if (this._operators.length === 0 || this._operands.length < 2) {
             throw new Error('Invalid state reached, please check expression');
@@ -47,7 +50,7 @@ class Evaluator {
         const operand2 = this._operands.pop();
         const operand1 = this._operands.pop();
         let operator = this._operators.pop();
-        while (operator === ')') {
+        while (operator === '(') {
             operator = this._operators.pop();
         }
         this._operands.push(operatorsMetaData[operator].op(operand1, operand2));
@@ -64,11 +67,12 @@ class Evaluator {
                 if (this._operators.length === 0) {
                     this._operators.push(letter);
                 } else {
-                    const {precedence} = operatorsMetaData[letter];
-                    if (operatorsMetaData[this._operators[this.operators.length - 1]] < precedence) {
+                    const { precedence } = operatorsMetaData[letter];
+                    if (operatorsMetaData[this._operators[this._operators.length - 1]].precedence < precedence) {
                         this._operators.push(letter);
                     } else {
                         this.evalNext();
+                        this._operators.push(letter);
                     }
                 }
             } else if (letter === ')') {
