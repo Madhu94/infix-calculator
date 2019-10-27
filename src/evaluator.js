@@ -91,15 +91,6 @@ class Evaluator {
     }
 }
 
-let evaluator = null;
-
-function getEvaluator() {
-    if (!evaluator) {
-        evaluator = new Evaluator();
-    }
-    return evaluator;
-}
-
 export function evalInfixExpression(expr) {
-    return getEvaluator().evaluate(expr);
+    return (new Evaluator()).evaluate(expr);
 }
